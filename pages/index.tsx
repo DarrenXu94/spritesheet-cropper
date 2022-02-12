@@ -5,6 +5,7 @@ import p5Types from "p5"; //Import this for typechecking and intellisense
 import { useEffect, useState } from "react";
 import * as url from "../public/adventurer_sprite_sheet_v1.1.png";
 import { saveAs } from "file-saver";
+import JSZip from "jszip";
 
 const Sketch = dynamic(() => import("react-p5"), {
   ssr: false,
@@ -14,13 +15,14 @@ let rows = 8;
 let source;
 let w, h;
 let tiles: p5Types.Image[] = [];
+let tilesPixelArray: Uint8Array[] = [];
 let x = 0;
 
 // let datab64: any = null;
 
 const Home: NextPage = () => {
   const [pixelArray, setPixelArray] = useState<any>(null);
-  const [imageDataUri, setImageDataUri] = useState<any>(null);
+  const [downloadFile, setDownloadFile] = useState<any>(null);
   const convertArrayIntoDataUri = (pixelArray) => {
     var canvas = document.createElement("canvas"),
       ctx: any = canvas.getContext("2d");
@@ -40,11 +42,30 @@ const Home: NextPage = () => {
     var dataUri = canvas.toDataURL(); // produces a PNG file
     return dataUri;
   };
+  function dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(","),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  }
   useEffect(() => {
     if (pixelArray) {
-      const dataUri = convertArrayIntoDataUri(pixelArray);
-      saveAs(dataUri, "test.png");
-      setImageDataUri(dataUri);
+      const zip = new JSZip();
+
+      for (let [idx, croppedImage] of pixelArray.entries()) {
+        const convertedImage = convertArrayIntoDataUri(croppedImage);
+        console.log({ idx, convertedImage });
+        zip.file(`${idx}.png`, dataURLtoFile(convertedImage, `${idx}.png`));
+      }
+      zip.generateAsync({ type: "blob" }).then(function (content) {
+        // saveAs(content, "download.zip");
+        setDownloadFile(content);
+      });
     }
   }, [pixelArray]);
 
@@ -59,22 +80,14 @@ const Home: NextPage = () => {
         let y = j * h;
         let img = p5.createImage(w, h);
         img.copy(source, x, y, w, h, 0, 0, w, h);
-        // let index = i + j * cols;
-        // detect if image is blank?
+
         tiles.push(img);
-        // board.push(index);
-        // let tile = new Tile(index, img);
-        // tiles.push(tile);
+
+        img.loadPixels();
+        tilesPixelArray.push(new Uint8Array(img.pixels));
       }
     }
-    tiles[0].loadPixels();
-    console.log(tiles[0].pixels);
-    const u8 = new Uint8Array(tiles[0].pixels);
-    setPixelArray(u8);
-
-    // const b64 = Buffer.from(u8).toString("base64");
-    // console.log(b64);
-    // setB64state(b64);
+    setPixelArray(tilesPixelArray);
   };
 
   const draw = (p5: p5Types) => {
@@ -88,6 +101,9 @@ const Home: NextPage = () => {
     //   x = 0;
     // }
     // p5.image(tiles[x], 0, 0);
+  };
+  const download = () => {
+    saveAs(downloadFile, "download.zip");
   };
   return (
     <div>
@@ -103,21 +119,14 @@ const Home: NextPage = () => {
           source = p.loadImage(url.default.src);
         }}
       />
-
-      {/* {b64state && (
-        <>
-          <img
-            src={`data:image/png;base64,  ${b64state}`}
-            alt="Base64 encoded image"
-          />
-          Data64
-        </>
-      )} */}
-      {imageDataUri && (
-        <>
-          <img src={imageDataUri} alt="Base64 encoded image" />
-          Data64
-        </>
+      {downloadFile && (
+        <button
+          onClick={() => {
+            download();
+          }}
+        >
+          Download
+        </button>
       )}
     </div>
   );
