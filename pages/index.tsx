@@ -9,7 +9,7 @@ import * as url from "../public/adventurer_sprite_sheet_v1.1.png";
 const Home: NextPage = () => {
   const [selectedFile, setSelectedFile] = useState<any>(null);
   return (
-    <div>
+    <div className="container mx-auto">
       <Head>
         <title>SpriteSheet Cropper</title>
         <meta
@@ -18,12 +18,16 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <FileUploader
-        onFileSelect={(file) => {
-          const objectURL = URL.createObjectURL(file);
-          setSelectedFile(objectURL);
-        }}
-      />
+      <h1 className="text-4xl py-4">SpriteSheet Cropper</h1>
+      <p className="text-xl">Crop your spritesheet into individual images</p>
+      <div className="py-5">
+        <FileUploader
+          onFileSelect={(file) => {
+            const objectURL = URL.createObjectURL(file);
+            setSelectedFile(objectURL);
+          }}
+        />
+      </div>
       {selectedFile && <SpriteImageViewer imgData={selectedFile} />}
       {/* {selectedFile && <SpritesheetCanvas imgData={selectedFile} />} */}
     </div>
