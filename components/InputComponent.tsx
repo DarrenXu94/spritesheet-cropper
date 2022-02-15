@@ -1,15 +1,19 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 
-export interface InputComponentProps {}
+export interface InputComponentProps {
+  onFormSubmit;
+}
 
-export default function InputComponent({}: InputComponentProps) {
+export default function InputComponent({ onFormSubmit }: InputComponentProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    onFormSubmit(data);
+  };
 
   return (
     <div className="text-center py-10">

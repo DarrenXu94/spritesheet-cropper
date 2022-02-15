@@ -9,6 +9,9 @@ import * as url from "../public/adventurer_sprite_sheet_v1.1.png";
 
 const Home: NextPage = () => {
   const [selectedFile, setSelectedFile] = useState<any>(null);
+  const onFormSubmit = (form) => {
+    console.log(form);
+  };
   return (
     <div className="container mx-auto">
       <Head>
@@ -33,7 +36,7 @@ const Home: NextPage = () => {
         <>
           <SpriteImageViewer imgData={selectedFile} />
 
-          <InputComponent />
+          <InputComponent onFormSubmit={onFormSubmit} />
         </>
       )}
       {/* {selectedFile && <SpritesheetCanvas imgData={selectedFile} />} */}
