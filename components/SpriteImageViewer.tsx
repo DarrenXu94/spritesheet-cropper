@@ -9,7 +9,7 @@ export default function SpriteImageViewer({ imgData }: SpriteImageViewerProps) {
   const [ratio, setRatio] = useState(16 / 9); // default to 16:9
 
   return (
-    <div>
+    <div className="max-w-screen-sm mx-auto">
       <Image
         src={imgData}
         width={500}

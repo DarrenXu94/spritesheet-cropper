@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { FileUploader } from "../components/FileUploader";
+import InputComponent from "../components/InputComponent";
 import SpriteImageViewer from "../components/SpriteImageViewer";
 import SpritesheetCanvas from "../components/SpritesheetCanvas";
 import * as url from "../public/adventurer_sprite_sheet_v1.1.png";
@@ -28,7 +29,13 @@ const Home: NextPage = () => {
           }}
         />
       </div>
-      {selectedFile && <SpriteImageViewer imgData={selectedFile} />}
+      {selectedFile && (
+        <>
+          <SpriteImageViewer imgData={selectedFile} />
+
+          <InputComponent />
+        </>
+      )}
       {/* {selectedFile && <SpritesheetCanvas imgData={selectedFile} />} */}
     </div>
   );
