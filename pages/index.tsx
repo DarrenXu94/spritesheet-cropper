@@ -5,12 +5,14 @@ import { FileUploader } from "../components/FileUploader";
 import InputComponent from "../components/InputComponent";
 import SpriteImageViewer from "../components/SpriteImageViewer";
 import SpritesheetCanvas from "../components/SpritesheetCanvas";
-import * as url from "../public/adventurer_sprite_sheet_v1.1.png";
 
 const Home: NextPage = () => {
   const [selectedFile, setSelectedFile] = useState<any>(null);
+  const [rows, setRows] = useState<null | number>(null);
+  const [columns, setColumns] = useState<null | number>(null);
   const onFormSubmit = (form) => {
-    console.log(form);
+    setRows(parseInt(form.rows));
+    setColumns(parseInt(form.columns));
   };
   return (
     <div className="container mx-auto">
@@ -39,7 +41,13 @@ const Home: NextPage = () => {
           <InputComponent onFormSubmit={onFormSubmit} />
         </>
       )}
-      {/* {selectedFile && <SpritesheetCanvas imgData={selectedFile} />} */}
+      {selectedFile && rows && columns && (
+        <SpritesheetCanvas
+          imgData={selectedFile}
+          rowsProp={rows}
+          colsProp={columns}
+        />
+      )}
     </div>
   );
 };

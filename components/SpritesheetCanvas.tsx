@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 
 export interface SpritesheetCanvasProps {
   imgData;
+  rowsProp: number;
+  colsProp: number;
 }
 // Converts a data URI to png. Used to add pngs into the zip
 function dataURLtoFile(dataurl, filename) {
@@ -45,24 +47,32 @@ const convertArrayIntoDataUri = (pixelArray) => {
 const Sketch = dynamic(() => import("react-p5"), {
   ssr: false,
 });
-let cols = 13;
-let rows = 8;
+let cols = 0;
+let rows = 0;
 let source;
 let w, h;
 let tiles: p5Types.Image[] = [];
 let tilesPixelArray: Uint8Array[] = [];
 let x = 0;
 
-export default function SpritesheetCanvas({ imgData }: SpritesheetCanvasProps) {
+export default function SpritesheetCanvas({
+  imgData,
+  rowsProp,
+  colsProp,
+}: SpritesheetCanvasProps) {
   const [pixelArray, setPixelArray] = useState<any>(null);
   const [downloadFile, setDownloadFile] = useState<any>(null);
+  useEffect(() => {
+    rows = rowsProp;
+    cols = colsProp;
+  }, [rowsProp, colsProp]);
+
   useEffect(() => {
     if (pixelArray) {
       const zip = new JSZip();
 
       for (let [idx, croppedImage] of pixelArray.entries()) {
         const convertedImage = convertArrayIntoDataUri(croppedImage);
-        console.log({ idx, convertedImage });
         zip.file(`${idx}.png`, dataURLtoFile(convertedImage, `${idx}.png`));
       }
       zip.generateAsync({ type: "blob" }).then(function (content) {
@@ -73,7 +83,7 @@ export default function SpritesheetCanvas({ imgData }: SpritesheetCanvasProps) {
   }, [pixelArray]);
   const setup = (p5: p5Types, canvasParentRef) => {
     p5.createCanvas(source.width, source.height).parent(canvasParentRef);
-    p5.image(source, 0, 0);
+    // p5.image(source, 0, 0);
     w = source.width / cols;
     h = source.height / rows;
     for (let i = 0; i < cols; i++) {
@@ -92,22 +102,25 @@ export default function SpritesheetCanvas({ imgData }: SpritesheetCanvasProps) {
     setPixelArray(tilesPixelArray);
   };
   const draw = (p5: p5Types) => {
-    p5.image(source, 0, 0);
+    // p5.image(source, 0, 0);
   };
   const download = () => {
     saveAs(downloadFile, "download.zip");
   };
   return (
-    <div>
-      <Sketch
-        setup={setup}
-        draw={draw}
-        preload={(p) => {
-          source = p.loadImage(imgData);
-        }}
-      />
+    <div className="flex justify-center">
+      <div style={{ display: "none" }}>
+        <Sketch
+          setup={setup}
+          draw={draw}
+          preload={(p) => {
+            source = p.loadImage(imgData);
+          }}
+        />
+      </div>
       {downloadFile && (
         <button
+          className="p-2 rounded-lg bg-true-gray-200"
           onClick={() => {
             download();
           }}
