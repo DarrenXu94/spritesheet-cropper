@@ -28,6 +28,7 @@ const Home: NextPage = () => {
       <p className="text-xl">Crop your spritesheet into individual images</p>
       <div className="py-5">
         <FileUploader
+          showFiles={true}
           onFileSelect={(file) => {
             const objectURL = URL.createObjectURL(file);
             setSelectedFile(objectURL);

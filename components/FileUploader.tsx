@@ -37,7 +37,7 @@ export const FileUploader = ({
         )}
       </div>
       {showFiles && files.length > 0 && (
-        <aside>
+        <aside className="pt-2">
           <h4>Files</h4>
           <ul>{files}</ul>
         </aside>

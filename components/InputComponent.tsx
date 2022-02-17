@@ -53,7 +53,10 @@ export default function InputComponent({ onFormSubmit }: InputComponentProps) {
         </div>
         <br />
 
-        <input className="bg-true-gray-200 p-2 rounded-lg" type="submit" />
+        <input
+          className="bg-true-gray-200 p-2 rounded-lg cursor-pointer"
+          type="submit"
+        />
       </form>
     </div>
   );

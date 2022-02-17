@@ -118,7 +118,7 @@ export default function SpritesheetCanvas({
           }}
         />
       </div>
-      {downloadFile && (
+      {downloadFile ? (
         <button
           className="p-2 rounded-lg bg-true-gray-200"
           onClick={() => {
@@ -127,6 +127,8 @@ export default function SpritesheetCanvas({
         >
           Download
         </button>
+      ) : (
+        <div>Processing file...</div>
       )}
     </div>
   );
