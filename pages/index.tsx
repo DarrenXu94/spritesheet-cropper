@@ -24,8 +24,22 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1 className="text-4xl py-4">SpriteSheet Cropper</h1>
-      <p className="text-xl">Crop your spritesheet into individual images</p>
+      <div className="flex justify-between">
+        <div>
+          <h1 className="text-4xl py-4">SpriteSheet Cropper</h1>
+          <p className="text-xl">
+            Crop your spritesheet into individual images
+          </p>
+        </div>
+        <div className="flex items-center ">
+          <div
+            className="border border-dark-900 rounded-full flex justify-center cursor-pointer"
+            style={{ width: "25px" }}
+          >
+            ?
+          </div>
+        </div>
+      </div>
       <div className="py-5">
         <FileUploader
           showFiles={true}
