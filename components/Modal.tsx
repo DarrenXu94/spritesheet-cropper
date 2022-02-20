@@ -1,5 +1,7 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Backdrop from "./Backdrop";
+import NiceModal, { useModal } from "@ebay/nice-modal-react";
+import ModalContainer from "./ModalContainer";
 
 const dropIn = {
   hidden: {
@@ -22,27 +24,34 @@ const dropIn = {
   },
 };
 
-const Modal = ({ handleClose, text }) => {
-  return (
-    <Backdrop onClick={handleClose}>
-      <motion.div
-        onClick={(e) => e.stopPropagation()}
-        className="modal bg-light-50 flex flex-col justify-evenly"
-        variants={dropIn}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-      >
-        <div>{text}</div>
-        <button
-          className="bg-dark-500 text-light-50 p-3 rounded-2xl"
-          onClick={handleClose}
-        >
-          Close
-        </button>
-      </motion.div>
-    </Backdrop>
-  );
-};
+export default NiceModal.create(({ text }: { text: any }) => {
+  // Use a hook to manage the modal state
+  const modal = useModal();
 
-export default Modal;
+  return (
+    <ModalContainer>
+      {modal.visible && (
+        <Backdrop onClick={() => modal.hide()}>
+          <motion.div
+            onClick={(e) => e.stopPropagation()}
+            className="modal bg-light-50 flex flex-col justify-evenly"
+            variants={dropIn}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <div>{text}</div>
+            <button
+              className="bg-dark-500 text-light-50 p-3 rounded-2xl"
+              onClick={() => {
+                modal.hide();
+              }}
+            >
+              Close
+            </button>
+          </motion.div>
+        </Backdrop>
+      )}
+    </ModalContainer>
+  );
+});

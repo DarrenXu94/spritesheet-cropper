@@ -21,6 +21,7 @@
     "windicss-webpack-plugin": "^1.6.4"
   },
   "devDependencies": {
+    "@ebay/nice-modal-react": "^1.2.0",
     "@types/node": "17.0.17",
     "@types/react": "17.0.39",
     "eslint": "8.8.0",
